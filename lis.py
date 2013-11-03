@@ -12,6 +12,7 @@ def parse(tokens):
         L = []
         while tokens[0]!=')':
             L.append(parse(tokens))
+            #BUG FIX: parsing '(()'
             if not tokens:
                 raise SyntaxError('need ")"')
         tokens.pop(0)
