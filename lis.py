@@ -20,24 +20,36 @@ def parse(tokens):
 
     elif token ==')':
         raise SyntaxError('unespected ")"')
-
     else:
         return token
 
+
+def car(x):
+    if not isinstance(x, list):
+        raise SyntaxError('%s is not list' %x)
+    if not x:
+        raise SyntaxError("%s is empty" %x)
+    return x[0]
 
 global_env = {
         '+':lambda x, y:x+y,        
         '-':lambda x, y:x-y,        
         '*':lambda x, y:x*y,        
         '/':lambda x, y:x/y,        
-        'eq': lambda x, y: x==y,
+        'eq':lambda x, y: x==y,
+        'car':car,
+        'cdr':lambda x:x[1:],
+        'atom':lambda x: x is str,
         }
 
 
 def eval(x, env=global_env):
     if isinstance(x, str):
         try:
-            return int(x)
+            try:
+                return int(x)
+            except:
+                return float(x)
         except:
             if not env.get(x):
                 raise NameError('undefined symbol %s' % x)
@@ -47,7 +59,7 @@ def eval(x, env=global_env):
         return []
 
     elif x[0] == 'quote':
-        return x[:-1]
+        return x[1]
 
     elif x[0] == 'define':
         _, var, exp = x
@@ -70,6 +82,10 @@ def to_string(x):
 
 def repl(prompt='lis.py>'):
     while True:
-        val =  eval(parse(tokenize(raw_input(prompt))))
-        print val 
+        try:
+            val =  eval(parse(tokenize(raw_input(prompt))))
+            print val 
+        except SyntaxError as e:
+            print e
+
 repl()
