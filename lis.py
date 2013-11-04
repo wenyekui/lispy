@@ -43,6 +43,9 @@ def eval(x, env=global_env):
                 raise NameError('undefined symbol %s' % x)
             return env[x]
 
+    elif not x:
+        return []
+
     elif x[0] == 'quote':
         return x[:-1]
 
@@ -61,6 +64,9 @@ def eval(x, env=global_env):
         proc = exps.pop(0)
         return proc(*exps)
 
+
+def to_string(x):
+    pass
 
 def repl(prompt='lis.py>'):
     while True:
